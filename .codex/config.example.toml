@@ -1,0 +1,10 @@
+[mcp_servers.quant_agent]
+command = "C:\\path\\to\\quant-agent\\.venv311\\Scripts\\python.exe"
+args = ["-m", "quant_agent.mcp_server", "--root", "C:\\path\\to\\quant-agent", "--enable-approval-gated"]
+cwd = "C:\\path\\to\\quant-agent"
+enabled = true
+required = false
+startup_timeout_sec = 20
+tool_timeout_sec = 900
+default_tools_approval_mode = "writes"
+env_vars = ["OPENAI_API_KEY", "DEEPSEEK_API_KEY"]

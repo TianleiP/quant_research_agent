@@ -1,0 +1,54 @@
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+
+def main() -> int:
+    target = Path(sys.argv[1])
+    output = Path(sys.argv[2])
+    source = target.read_text(encoding="utf-8")
+    required = [
+        'POSITIONS_DIR = OUT_DIR / "positions"',
+        "realized_weights = _simulate_with_weight_capture(",
+        "_trades_from_weight_capture",
+        "_rankings_from_weight_capture",
+    ]
+    if any(marker not in source for marker in required):
+        print("repair markers are missing", file=sys.stderr)
+        return 2
+    output.mkdir(parents=True, exist_ok=True)
+    (output / "summary_by_window.csv").write_text(
+        "window,variant_id,days,ann_return,max_drawdown,sharpe,ann_vol,cum_return,mean_cash_weight,mean_gross_exposure\n"
+        "full_2000_2026,target_variant,2,0.20,-0.10,1.2,0.15,0.25,0.10,0.90\n",
+        encoding="utf-8",
+    )
+    (output / "daily_curve.csv").write_text(
+        "date,variant_id,daily_return,equity,decision_label,turnover,gross_exposure,cash_weight\n"
+        "2026-01-01,target_variant,0.0,1.0,start,0.0,0.0,1.0\n"
+        "2026-01-02,target_variant,0.1,1.1,risk_on,0.5,0.9,0.1\n",
+        encoding="utf-8",
+    )
+    (output / "positions.csv").write_text(
+        "date,symbol,weight\n2026-01-02,AAPL,0.6\n",
+        encoding="utf-8",
+    )
+    (output / "trades.csv").write_text(
+        "date,symbol,weight_change\n2026-01-02,AAPL,0.6\n",
+        encoding="utf-8",
+    )
+    (output / "rankings.csv").write_text(
+        "date,symbol,rank,score\n2026-01-02,AAPL,1,0.9\n",
+        encoding="utf-8",
+    )
+    (output / "metadata.json").write_text(
+        json.dumps({"current_variant_id": "target_variant", "source_script": str(target)}),
+        encoding="utf-8",
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+

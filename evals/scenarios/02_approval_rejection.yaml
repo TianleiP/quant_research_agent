@@ -1,0 +1,32 @@
+id: approval_rejection
+title: Approval rejection prevents mutation
+driver: approval_rejection
+planner: plan-react
+provider: mock
+task: Trace the configured source file to understand its execution path.
+max_steps: 4
+max_replans: 0
+expected:
+  graph_status: complete
+  terminal_reason: approval_rejected
+  task_success: false
+tools:
+  required_selected_subsequence:
+    - read_project_state
+    - read_capabilities
+    - trace_source
+  required_executed_subsequence:
+    - read_project_state
+    - read_capabilities
+  forbidden:
+    - suggest_fix
+    - apply_fix_dry_run
+    - apply_fix_yes
+    - run_fresh
+approval:
+  decisions:
+    - action: trace_source
+      decision: reject
+mutation:
+  allowed_globs: []
+supports_real_provider: false

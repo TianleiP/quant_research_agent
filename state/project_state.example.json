@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "project": {
+    "name": "quant-agent",
+    "package_name": "quant-agent",
+    "requires_python": ">=3.11",
+    "root": "C:/path/to/quant-agent"
+  },
+  "environment": {
+    "official_agent_runtime": ".venv311",
+    "python_for_tests": ".venv311/Scripts/python.exe"
+  },
+  "external_repos": [
+    {
+      "name": "xgboost",
+      "path": "C:/path/to/xgboost",
+      "status": "configure-locally"
+    }
+  ],
+  "latest_verified_run": null,
+  "notes": [
+    "Copy this file to state/project_state.json and refresh it locally with quant-agent update-state."
+  ]
+}

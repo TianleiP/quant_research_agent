@@ -1,0 +1,37 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+evals/results/
+.eval_tmp/
+.wheels/
+.env
+.env.*
+!.env.example
+.env.*
+!.env.example
+.discovery/
+.code_memory/
+.fix_proposals/
+.source_traces/
+.venv/
+.venv311/
+venv/
+dist/
+build/
+*.egg-info/
+runs/*
+!runs/.gitkeep
+state/sessions/*.jsonl
+state/sessions/*.state.json
+state/sessions/*.approval.json
+state/sessions/*.sqlite*
+
+# Machine-local integration configuration. Public templates live beside them.
+/.codex/config.toml
+/configs/xgboost_live_strategy.yaml
+/state/project_state.json
+
+# Machine-local integration configuration. Public templates live beside them.
+/.codex/config.toml
+/configs/xgboost_live_strategy.yaml
+/state/project_state.json

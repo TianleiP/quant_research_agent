@@ -1,0 +1,36 @@
+strategy:
+  name: base5_combo_accel2_mom12
+
+engine: subprocess_csv
+
+subprocess:
+  working_dir: "C:/path/to/xgboost"
+  command:
+    - "C:/path/to/python.exe"
+    - research/AAA_best_cadidate_correct_data/run_current_strategy_clean_ablation.py
+  run_before_ingest: false
+  timeout_seconds: 5400
+
+outputs:
+  expected_variant_id: base5_combo_accel2_mom12
+  primary_window: full_2000_2026
+  summary_csv: "research/AAA_best_cadidate_correct_data/current_strategy_clean_ablation/summary_by_window.csv"
+  daily_curve_csv: "research/AAA_best_cadidate_correct_data/current_strategy_clean_ablation/daily_curves/base5_combo_accel2_mom12.csv"
+  positions_csv: "research/AAA_best_cadidate_correct_data/current_strategy_clean_ablation/positions/base5_combo_accel2_mom12.csv"
+  trades_csv: "research/AAA_best_cadidate_correct_data/current_strategy_clean_ablation/trades/base5_combo_accel2_mom12.csv"
+  rankings_csv: "research/AAA_best_cadidate_correct_data/current_strategy_clean_ablation/rankings/base5_combo_accel2_mom12.csv"
+  metadata_json: "research/AAA_best_cadidate_correct_data/current_strategy_clean_ablation/metadata.json"
+  rolling_1y_summary_csv: "research/AAA_best_cadidate_correct_data/current_strategy_clean_ablation/rolling_1y_summary.csv"
+  bucket_summary_csv: "research/AAA_best_cadidate_correct_data/current_strategy_clean_ablation/bucket_summary.csv"
+  changed_day_summary_csv: "research/AAA_best_cadidate_correct_data/current_strategy_clean_ablation/changed_day_summary.csv"
+  variant_specs_csv: "research/AAA_best_cadidate_correct_data/current_strategy_clean_ablation/variant_specs.csv"
+  report_md: "research/AAA_best_cadidate_correct_data/current_strategy_clean_ablation/CURRENT_STRATEGY_CLEAN_ABLATION_REPORT.md"
+
+data:
+  version: "external_xgboost_research_outputs"
+  universe_version: "sharadar_sp500_daily_2000_2026"
+
+backtest:
+  start_date: "2000-03-10"
+  end_date: "2026-05-22"
+  rebalance_rule: "external_script"

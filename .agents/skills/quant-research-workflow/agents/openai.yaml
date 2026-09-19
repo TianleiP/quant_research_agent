@@ -1,0 +1,11 @@
+interface:
+  display_name: "Quant Research Workflow"
+  short_description: "Safely inspect, repair, and verify quant research"
+  default_prompt: "Use $quant-research-workflow to inspect this quant project and recommend the safest next action."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "quant_agent"
+      description: "Local quant-agent tools for project evidence, repair proposals, approved execution, and verification."
+      transport: "stdio"

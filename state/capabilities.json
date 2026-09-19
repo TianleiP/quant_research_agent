@@ -1,0 +1,307 @@
+{
+  "schema_version": 1,
+  "last_updated_local": "2026-09-13",
+  "purpose": "Machine-readable map of current quant-agent commands and implementation techniques.",
+  "capabilities": [
+    {
+      "name": "run",
+      "status": "implemented",
+      "command": "quant-agent run --config <config.yaml> [--fresh]",
+      "implementation": "src/quant_agent/cli.py, src/quant_agent/config.py, src/quant_agent/backtest/adapter.py, src/quant_agent/backtest/subprocess_csv_engine.py, src/quant_agent/registry.py",
+      "technique": "Load YAML config, dispatch to engine, optionally run subprocess, read configured CSV/JSON outputs, normalize rows, enrich saved metrics, copy source artifacts, and write run manifest, reproducibility metadata, and reports.",
+      "outputs": [
+        "runs/<run_id>/manifest.json",
+        "runs/<run_id>/engine_metadata.json",
+        "runs/<run_id>/metrics.json",
+        "runs/<run_id>/decision_log.csv",
+        "runs/<run_id>/equity_curve.csv",
+        "runs/<run_id>/positions.csv",
+        "runs/<run_id>/trades.csv",
+        "runs/<run_id>/source_artifacts/*"
+      ]
+    },
+    {
+      "name": "metrics",
+      "status": "implemented",
+      "command": "quant-agent metrics --run <run_id|latest>",
+      "implementation": "src/quant_agent/metrics.py, src/quant_agent/cli.py",
+      "technique": "Read metrics.json and display normalized performance fields. Saved runs enrich metrics with volatility, Sharpe, Sortino, drawdown date/recovery, period returns, best/worst periods, trade count, and position exposure when artifacts are available.",
+      "outputs": [
+        "console summary"
+      ]
+    },
+    {
+      "name": "inspect-artifacts",
+      "status": "implemented",
+      "command": "quant-agent inspect-artifacts --run <run_id|latest>",
+      "implementation": "src/quant_agent/audits/artifact_contract.py, src/quant_agent/cli.py",
+      "technique": "Check required and position-level artifacts for existence, minimum rows, and expected contract columns.",
+      "outputs": [
+        "runs/<run_id>/audits/artifact_contract.json",
+        "runs/<run_id>/audits/artifact_contract.md"
+      ]
+    },
+    {
+      "name": "audit lag",
+      "status": "implemented",
+      "command": "quant-agent audit lag --run <run_id|latest>",
+      "implementation": "src/quant_agent/audits/lag_safety.py",
+      "technique": "Deterministically inspect decision_log timing fields and verify data availability does not occur after decision/execution dates.",
+      "outputs": [
+        "runs/<run_id>/audits/lag_safety.json",
+        "runs/<run_id>/audits/lag_safety.md"
+      ]
+    },
+    {
+      "name": "audit robustness",
+      "status": "implemented",
+      "command": "quant-agent audit robustness --run <run_id|latest>",
+      "implementation": "src/quant_agent/audits/robustness.py",
+      "technique": "Read source summary/rolling artifacts, compare nearby variants, rolling 1Y behavior, drawdown, and window-level sensitivity.",
+      "outputs": [
+        "runs/<run_id>/audits/robustness.json",
+        "runs/<run_id>/audits/robustness.md"
+      ]
+    },
+    {
+      "name": "audit validation",
+      "status": "implemented",
+      "command": "quant-agent audit validation --run <run_id|latest>",
+      "implementation": "src/quant_agent/audits/validation_attribution.py",
+      "technique": "Read daily curve, isolate validation window, compute attribution by days, states, exposure, and yearly behavior.",
+      "outputs": [
+        "runs/<run_id>/audits/validation_attribution.json",
+        "runs/<run_id>/audits/validation_attribution.md"
+      ]
+    },
+    {
+      "name": "audit costs",
+      "status": "implemented",
+      "command": "quant-agent audit costs --run <run_id|latest>",
+      "implementation": "src/quant_agent/audits/cost_stress.py, src/quant_agent/cli.py",
+      "technique": "Apply deterministic transaction-cost and slippage stress scenarios using daily turnover when present, or aggregate turnover fallback when daily turnover is unavailable.",
+      "outputs": [
+        "runs/<run_id>/audits/cost_stress.json",
+        "runs/<run_id>/audits/cost_stress.md"
+      ]
+    },
+    {
+      "name": "audit docs",
+      "status": "implemented",
+      "command": "quant-agent audit docs --run <run_id|latest>",
+      "implementation": "src/quant_agent/audits/docs_consistency.py",
+      "technique": "Check consistency between generated documents and expected run metadata/artifact claims.",
+      "outputs": [
+        "runs/<run_id>/audits/docs_consistency.json",
+        "runs/<run_id>/audits/docs_consistency.md"
+      ]
+    },
+    {
+      "name": "promote",
+      "status": "implemented",
+      "command": "quant-agent promote --run <run_id|latest> [--diagnose]",
+      "implementation": "src/quant_agent/audits/promotion.py",
+      "technique": "Compile metrics, flags, diagnosis, artifact contract, lag, robustness, validation attribution, cost/slippage stress, and strategy lineage into a promotion recommendation.",
+      "outputs": [
+        "runs/<run_id>/audits/PROMOTION_AUDIT_<variant>.json",
+        "runs/<run_id>/audits/PROMOTION_AUDIT_<variant>.md"
+      ]
+    },
+    {
+      "name": "close-promotion",
+      "status": "implemented",
+      "command": "quant-agent close-promotion --run <run_id|latest> [--diagnose --provider mock|openai|deepseek|auto]",
+      "implementation": "src/quant_agent/audits/promotion_closure.py, src/quant_agent/cli.py",
+      "technique": "Regenerate promotion evidence, optionally attach diagnosis, classify each remaining promotion warning as closed, needs_action, needs_decision, or blocked, and write a durable closure report.",
+      "outputs": [
+        "runs/<run_id>/audits/promotion_closure.json",
+        "runs/<run_id>/audits/promotion_closure.md"
+      ]
+    },
+    {
+      "name": "diagnose",
+      "status": "implemented",
+      "command": "quant-agent diagnose --run <run_id|latest> --provider <mock|deepseek|openai>",
+      "implementation": "src/quant_agent/diagnostics/anomaly.py, src/quant_agent/diagnostics/structured.py, src/quant_agent/llm/*",
+      "technique": "Build prompt from run artifacts, call one LLM provider request, parse/render diagnosis.",
+      "outputs": [
+        "runs/<run_id>/diagnosis.json",
+        "runs/<run_id>/diagnosis.md"
+      ],
+      "agentic_level": "one-shot LLM call"
+    },
+    {
+      "name": "discover",
+      "status": "implemented",
+      "command": "quant-agent discover --repo <path>",
+      "implementation": "src/quant_agent/discovery/scanner.py",
+      "technique": "Filesystem scan over source files to identify likely entrypoints, constants, imports, outputs, and artifact references.",
+      "outputs": [
+        ".discovery/*"
+      ]
+    },
+    {
+      "name": "memory",
+      "status": "implemented",
+      "command": "quant-agent memory build --repo <path> [--embedding-provider none|auto|openai]; quant-agent memory query --index <code_memory.json> --query <text> [--embedding-provider auto|none|openai]",
+      "implementation": "src/quant_agent/memory/code_index.py, src/quant_agent/memory/embeddings.py, src/quant_agent/memory/hybrid.py, src/quant_agent/cli.py",
+      "technique": "Build a backward-compatible local source-chunk index with term frequencies, extracted functions/classes, paths, compact hashed vectors, and optional batched OpenAI dense embeddings. Query with BM25 lexical relevance, exact symbol/path overlap, semantic cosine similarity when available, and weighted reciprocal-rank fusion across channels. Return per-channel scores plus file-and-line citations. Auto mode falls back to local lexical/symbol retrieval when semantic credentials or the provider are unavailable; explicit OpenAI mode fails visibly. No vector database is required.",
+      "outputs": [
+        ".code_memory/<repo>/code_memory.json",
+        ".code_memory/<repo>/CODE_MEMORY.md",
+        "console query results"
+      ]
+    },
+    {
+      "name": "explain-entrypoint",
+      "status": "implemented",
+      "command": "quant-agent explain-entrypoint --repo <path> --file <relative-file> --provider <mock|deepseek|openai>",
+      "implementation": "src/quant_agent/discovery/explain.py, src/quant_agent/llm/*",
+      "technique": "Collect local source/discovery context, build explanation prompt, call one LLM provider.",
+      "outputs": [
+        ".discovery/*"
+      ],
+      "agentic_level": "one-shot LLM call"
+    },
+    {
+      "name": "trace-source",
+      "status": "implemented",
+      "command": "quant-agent trace-source --repo <path> --file <relative-file>",
+      "implementation": "src/quant_agent/fixes/source_trace.py",
+      "technique": "Static source trace using syntax/regex inspection of functions, calls, imports, CSV exports, and weight/rank candidates.",
+      "outputs": [
+        ".source_traces/*"
+      ]
+    },
+    {
+      "name": "suggest-fix",
+      "status": "implemented",
+      "command": "quant-agent suggest-fix --issue <stale-metadata|missing-position-exports|generalized-fix> --repo <path> --file <relative-file>",
+      "implementation": "src/quant_agent/fixes/missing_exports.py, src/quant_agent/fixes/stale_metadata.py, src/quant_agent/fixes/generalized.py, src/quant_agent/fixes/proposal_contract.py",
+      "technique": "Build source profile and trace, query matching repo code memory when available, then generate a structured review package with problem, target files, intended behavior, patch plan, verification commands, evidence, memory context, and a quality gate. For known safe patterns, generate an auto-applicable unified diff. For generalized-fix, call an LLM provider for a review-only draft and optional candidate.patch while keeping apply_supported=false.",
+      "outputs": [
+        ".fix_proposals/*/proposal.json",
+        ".fix_proposals/*/proposal.patch",
+        ".fix_proposals/*/source_trace.json",
+        ".fix_proposals/*/source_trace.md"
+      ]
+    },
+    {
+      "name": "apply-fix",
+      "status": "implemented",
+      "command": "quant-agent apply-fix --proposal <proposal.json> [--yes]",
+      "implementation": "src/quant_agent/fixes/apply.py",
+      "technique": "Parse and validate unified diff, ensure target path remains inside proposal repo, dry-run or apply patch, then write apply_result.json.",
+      "outputs": [
+        ".fix_proposals/*/apply_result.json"
+      ]
+    },
+    {
+      "name": "replay",
+      "status": "implemented",
+      "command": "quant-agent replay --run <run_id|latest> --date <YYYY-MM-DD>",
+      "implementation": "src/quant_agent/replay/replay.py, src/quant_agent/replay/artifacts.py",
+      "technique": "Read decision log, positions, trades, and rankings through manifest-aware artifact resolution, then summarize date-level state, holdings, trade changes, and rank context.",
+      "outputs": [
+        "console summary"
+      ]
+    },
+    {
+      "name": "agent-session",
+      "status": "implemented",
+      "command": "quant-agent agent-session --task <natural-language-task> [--planner rule|llm|react|plan-react] [--provider mock|openai|deepseek|auto] [--max-steps N] [--max-replans N] [--checkpoint-backend sqlite|postgres]",
+      "implementation": "src/quant_agent/agent/state.py, src/quant_agent/agent/tool_catalog.py, src/quant_agent/agent/actions.py, src/quant_agent/agent/argument_resolver.py, src/quant_agent/agent/tools.py, src/quant_agent/agent/lifecycle.py, src/quant_agent/agent/planner.py, src/quant_agent/agent/planning.py, src/quant_agent/agent/react.py, src/quant_agent/agent/nodes.py, src/quant_agent/agent/graph.py, src/quant_agent/agent/persistence.py, src/quant_agent/agent/runner.py, src/quant_agent/llm/structured.py, src/quant_agent/llm/openai_client.py, src/quant_agent/llm/deepseek_client.py, src/quant_agent/llm/mock.py, src/quant_agent/cli.py",
+      "technique": "LangGraph plan-decide-execute-evaluate loop with four selectable paths: deterministic rules, legacy strict-JSON action selection, native function/tool-calling ReAct, and plan-react. Plan-react generates a strict multi-step plan, persists it in graph State, limits the ReAct executor to the current step's declared tools, and uses a structured evaluator after each meaningful action. The evaluator may continue, complete, block, or request a bounded revision of only the remaining plan; completion claims are checked against actual successful tool results. Replan and evaluation counts are capped. Every model-selected tool still passes through deterministic argument, permission, risk, and approval policy. Approval-gated calls use LangGraph interrupt/resume with a configurable SQLite default or official PostgreSQL checkpointer; JSONL remains the audit log and database credentials are not persisted in Agent state. Existing proposal-aware patch-run-inspect, revision synthesis, loop guards, code-memory retrieval, and inferred argument defaults remain intact.",
+      "outputs": [
+        "state/sessions/<session_id>.jsonl",
+        "state/sessions/<session_id>.state.json",
+        "state/sessions/<session_id>.approval.json",
+        "state/sessions/checkpoints.sqlite",
+        "official LangGraph PostgreSQL checkpoint tables when configured",
+        ".fix_proposals/*/failure_context.md",
+        ".fix_proposals/*/proposal.patch",
+        "console summary"
+      ],
+      "known_gap": "Approval gates are CLI-based rather than interactive in-app prompts. PostgreSQL persistence does not guarantee arbitrary external side effects are exactly-once after an uncontrolled crash."
+    },
+    {
+      "name": "agent-resume",
+      "status": "implemented",
+      "command": "quant-agent agent-resume --session <session_id> (--approve | --reject) [--checkpoint-backend sqlite|postgres]",
+      "implementation": "src/quant_agent/agent/persistence.py, src/quant_agent/agent/runner.py, src/quant_agent/agent/session.py, src/quant_agent/cli.py",
+      "technique": "Load the persisted LangGraph thread from the configured SQLite or PostgreSQL checkpointer and resume its native interrupt with Command(resume=...). Rejected work ends without tool execution; approved work still passes through the deterministic tool registry before the graph loop continues. JSON state remains a readable snapshot rather than the execution source of truth. Parameterized integration tests delete that snapshot and resume the same thread in a fresh process against both backends.",
+      "outputs": [
+        "state/sessions/<session_id>.jsonl",
+        "state/sessions/<session_id>.state.json",
+        "state/sessions/<session_id>.approval.json",
+        "action-specific artifacts"
+      ]
+    },
+    {
+      "name": "ask",
+      "status": "implemented",
+      "command": "quant-agent ask <natural-language-request> [--execute] [--run latest|<run_id>] [--provider mock|openai|deepseek|auto]",
+      "implementation": "src/quant_agent/command_router.py, src/quant_agent/cli.py",
+      "technique": "Deterministic natural-language command routing over known quant-agent commands. Prints a route plan by default, executes routed commands with --execute, sends risky trace/fix/run requests through agent-session so approval gates remain active, and gives patch-run-inspect lifecycle requests enough step budget.",
+      "outputs": [
+        "console route plan",
+        "routed command output when --execute is used"
+      ]
+    },
+    {
+      "name": "lineage",
+      "status": "implemented",
+      "command": "quant-agent lineage show; quant-agent lineage update --strategy <name> [--previous <baseline>] [--changed-rule <text>] [--audit <path>]",
+      "implementation": "src/quant_agent/lineage.py, src/quant_agent/cli.py",
+      "technique": "Maintain state/strategy_lineage.json as a lightweight strategy evolution ledger with previous baseline, reason, changed/inherited/removed rules, audit links, status, and timestamps.",
+      "outputs": [
+        "state/strategy_lineage.json",
+        "console lineage summary"
+      ]
+    },
+    {
+      "name": "update-state",
+      "status": "implemented",
+      "command": "quant-agent update-state [--run latest|<run_id>] [--test-status <status>] [--dry-run]",
+      "implementation": "src/quant_agent/state_updater.py, src/quant_agent/cli.py",
+      "technique": "Read pyproject metadata, environment/package versions, latest run metrics, artifact contract, promotion audit, and capability map; preserve narrative state while refreshing measurable fields in state/project_state.json.",
+      "outputs": [
+        "state/project_state.json",
+        "console summary"
+      ]
+    },
+    {
+      "name": "mcp-server",
+      "status": "implemented",
+      "command": "quant-agent-mcp --root <project-root> [--enable-approval-gated]",
+      "implementation": "src/quant_agent/mcp_server.py, src/quant_agent/agent/tool_catalog.py, src/quant_agent/agent/tools.py, .codex/config.toml",
+      "technique": "Expose all 15 canonical JSON-schema tools through the official MCP Python SDK over stdio. Derive tool schemas and read-only/destructive/open-world annotations from the shared catalog, return structured JSON results, disable approval-gated operations by default, and delegate every call to the existing deterministic argument, risk, approval, path, and handler layers. The Codex project config enables gated tools while requesting host approval for writes.",
+      "outputs": [
+        "MCP tools/list response",
+        "MCP tools/call structured results"
+      ]
+    },
+    {
+      "name": "agent-evals",
+      "status": "implemented",
+      "command": "python -m evals.run [--scenario <id>] [--provider openai]",
+      "implementation": "evals/contracts.py, evals/harness.py, evals/graders.py, evals/scenario_drivers.py, evals/mock_providers.py, evals/run.py, evals/scenarios/*.yaml, evals/fixtures/*",
+      "technique": "Run six complete workflows in isolated project and external-repo fixtures. Grade expected graph state separately from task success and terminal reason; require ordered tool subsequences by default; enforce forbidden tools, approval decisions, action budgets, file-hash mutation allowlists, and scenario-specific artifact evidence. Use a deterministic mock provider, an eval-only failure-aware planner/evaluator, deterministic fake embeddings for a low-lexical-overlap semantic query, and a real stdio MCP subprocess for registry/schema/safety parity. Emit machine-readable JSON and Markdown summaries.",
+      "outputs": [
+        "evals/results/<suite-id>/results.json",
+        "evals/results/<suite-id>/summary.md"
+      ]
+    },
+    {
+      "name": "codex-skill",
+      "status": "implemented",
+      "command": "Use $quant-research-workflow in Codex",
+      "implementation": ".agents/skills/quant-research-workflow/SKILL.md, .agents/skills/quant-research-workflow/agents/openai.yaml, .agents/skills/quant-research-workflow/references/tool-guide.md",
+      "technique": "Package an evidence-first inspect-diagnose-propose-approve-execute-verify-report workflow as a repository Skill with an explicit MCP dependency and tool-risk guide. The Skill guides model behavior while authorization and execution remain in the MCP host and deterministic quant-agent core.",
+      "outputs": [
+        "Codex-discovered repository Skill",
+        "guided MCP workflow"
+      ]
+    }
+  ]
+}

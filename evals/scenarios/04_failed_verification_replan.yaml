@@ -1,0 +1,47 @@
+id: failed_verification_replan
+title: Failed verification records evidence and replans
+driver: failed_verification_replan
+planner: plan-react
+provider: mock
+task: Complete the latest proposal patch-run-inspect lifecycle and preserve failure evidence if verification fails.
+max_steps: 8
+max_replans: 1
+expected:
+  graph_status: complete
+  terminal_reason: verification_failed_revision_recorded
+  task_success: false
+tools:
+  required_selected_subsequence:
+    - read_project_state
+    - read_capabilities
+    - inspect_proposal
+    - apply_fix_dry_run
+    - apply_fix_yes
+    - run_fresh
+    - suggest_revision
+    - synthesize_revision
+  required_executed_subsequence:
+    - read_project_state
+    - read_capabilities
+    - inspect_proposal
+    - apply_fix_dry_run
+    - apply_fix_yes
+    - run_fresh
+    - suggest_revision
+    - synthesize_revision
+  forbidden:
+    - trace_source
+    - suggest_fix
+approval:
+  decisions:
+    - action: apply_fix_dry_run
+      decision: approve
+    - action: apply_fix_yes
+      decision: approve
+    - action: run_fresh
+      decision: approve
+mutation:
+  allowed_globs:
+    - project/.fix_proposals/**
+    - external_repo/script.py
+supports_real_provider: false

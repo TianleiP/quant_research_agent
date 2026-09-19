@@ -1,0 +1,38 @@
+id: mcp_parity
+title: MCP and shared registry parity
+driver: mcp_parity
+planner: plan-react
+provider: mock
+task: Assess the current project status, metrics, and summary from existing project evidence.
+max_steps: 4
+max_replans: 0
+expected:
+  graph_status: complete
+  terminal_reason: completed
+  task_success: true
+tools:
+  required_selected_subsequence:
+    - read_project_state
+    - read_capabilities
+    - metrics_latest
+    - inspect_latest_run
+  required_executed_subsequence:
+    - read_project_state
+    - read_capabilities
+    - metrics_latest
+    - inspect_latest_run
+  forbidden:
+    - inspect_artifacts_latest
+    - promote_latest
+    - suggest_revision
+    - synthesize_revision
+    - trace_source
+    - suggest_fix
+    - apply_fix_dry_run
+    - apply_fix_yes
+    - run_fresh
+approval:
+  decisions: []
+mutation:
+  allowed_globs: []
+supports_real_provider: false

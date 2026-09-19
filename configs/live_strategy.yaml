@@ -1,0 +1,24 @@
+strategy:
+  name: top8_partial20
+
+engine: dummy
+
+backtest:
+  start_date: "2020-01-01"
+  end_date: "2024-12-31"
+  rebalance_rule: "monthly"
+
+costs:
+  transaction_cost_bps: 10
+  slippage_bps: 5
+
+data:
+  version: "replace_with_data_snapshot_id"
+  universe_version: "replace_with_universe_snapshot_id"
+
+parameters:
+  top_n: 8
+  top2_weight: 0.20
+  momentum_lookback_days: 252
+  liquidity_threshold: 1000000
+

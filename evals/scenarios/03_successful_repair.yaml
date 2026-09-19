@@ -1,0 +1,54 @@
+id: successful_repair
+title: Successful repair with retrieval and verification
+driver: successful_repair
+planner: plan-react
+provider: mock
+task: Search code memory, trace the source, suggest a missing-export fix, dry-check that fix, apply that fix, and execute a fresh backtest.
+max_steps: 8
+max_replans: 0
+expected:
+  graph_status: complete
+  terminal_reason: completed
+  task_success: true
+tools:
+  required_selected_subsequence:
+    - read_project_state
+    - read_capabilities
+    - query_code_memory
+    - trace_source
+    - suggest_fix
+    - apply_fix_dry_run
+    - apply_fix_yes
+    - run_fresh
+  required_executed_subsequence:
+    - read_project_state
+    - read_capabilities
+    - query_code_memory
+    - trace_source
+    - suggest_fix
+    - apply_fix_dry_run
+    - apply_fix_yes
+    - run_fresh
+  forbidden:
+    - suggest_revision
+    - synthesize_revision
+approval:
+  decisions:
+    - action: trace_source
+      decision: approve
+    - action: suggest_fix
+      decision: approve
+    - action: apply_fix_dry_run
+      decision: approve
+    - action: apply_fix_yes
+      decision: approve
+    - action: run_fresh
+      decision: approve
+mutation:
+  allowed_globs:
+    - project/.source_traces/**
+    - project/.fix_proposals/**
+    - project/runs/**
+    - external_repo/research/strategy.py
+    - external_repo/outputs/**
+supports_real_provider: false

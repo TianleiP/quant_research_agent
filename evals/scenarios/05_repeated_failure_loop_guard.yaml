@@ -1,0 +1,67 @@
+id: repeated_failure_loop_guard
+title: Repeated verification failure trips loop guard
+driver: repeated_failure_loop_guard
+planner: rule
+provider: mock
+task: Complete the latest proposal patch-run-inspect lifecycle.
+max_steps: 16
+max_replans: 0
+expected:
+  graph_status: blocked
+  terminal_reason: revision_loop_guard
+  task_success: false
+tools:
+  required_selected_subsequence:
+    - read_project_state
+    - read_capabilities
+    - inspect_proposal
+    - apply_fix_dry_run
+    - apply_fix_yes
+    - run_fresh
+    - inspect_artifacts_latest
+    - suggest_revision
+    - synthesize_revision
+    - inspect_proposal
+    - apply_fix_dry_run
+    - apply_fix_yes
+    - run_fresh
+    - inspect_artifacts_latest
+  required_executed_subsequence:
+    - read_project_state
+    - read_capabilities
+    - inspect_proposal
+    - apply_fix_dry_run
+    - apply_fix_yes
+    - run_fresh
+    - inspect_artifacts_latest
+    - suggest_revision
+    - synthesize_revision
+    - inspect_proposal
+    - apply_fix_dry_run
+    - apply_fix_yes
+    - run_fresh
+    - inspect_artifacts_latest
+  forbidden:
+    - trace_source
+    - suggest_fix
+approval:
+  decisions:
+    - action: apply_fix_dry_run
+      decision: approve
+    - action: apply_fix_yes
+      decision: approve
+    - action: run_fresh
+      decision: approve
+    - action: apply_fix_dry_run
+      decision: approve
+    - action: apply_fix_yes
+      decision: approve
+    - action: run_fresh
+      decision: approve
+mutation:
+  allowed_globs:
+    - project/.fix_proposals/**
+    - project/runs/**
+    - external_repo/research/strategy.py
+    - external_repo/outputs/**
+supports_real_provider: false

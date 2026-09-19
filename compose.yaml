@@ -1,0 +1,21 @@
+services:
+  checkpoint-postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-quant_agent}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-quant_agent}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-55432}:5432"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U ${POSTGRES_USER:-quant_agent} -d ${POSTGRES_DB:-quant_agent}
+      interval: 2s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - quant-agent-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  quant-agent-postgres-data:

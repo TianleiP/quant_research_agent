@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quant-agent"
+version = "0.1.0"
+description = "Quant research audit and experiment-management agent."
+requires-python = ">=3.11"
+dependencies = [
+  "langgraph>=1.0.0",
+  "langgraph-checkpoint-sqlite==3.1.1",
+  "mcp>=2.0,<3.0",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0,<8.0",
+]
+postgres = [
+  "langgraph-checkpoint-postgres==3.1.2",
+  "psycopg[binary,pool]>=3.2,<4",
+]
+
+[project.scripts]
+quant-agent = "quant_agent.cli:main"
+quant-agent-mcp = "quant_agent.mcp_server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+markers = [
+  "postgres: requires a disposable PostgreSQL database configured with QUANT_AGENT_TEST_POSTGRES_URI",
+]
