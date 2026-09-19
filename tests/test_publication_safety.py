@@ -17,6 +17,7 @@ def test_machine_local_files_are_ignored() -> None:
     assert "/.codex/config.toml" in ignore_lines
     assert "/configs/xgboost_live_strategy.yaml" in ignore_lines
     assert "/state/project_state.json" in ignore_lines
+    assert ".demo_runs/" in ignore_lines
     assert ".env" in ignore_lines
     assert "!.env.example" in ignore_lines
 

@@ -31,6 +31,7 @@ SCANNED_NAMES = {".env.example", ".gitignore"}
 
 EXCLUDED_TOP_LEVEL_DIRS = {
     ".code_memory",
+    ".demo_runs",
     ".discovery",
     ".eval_tmp",
     ".fix_proposals",

@@ -19,6 +19,26 @@ the optional PostgreSQL checkpoint backend, install the PostgreSQL extra:
 .venv311/Scripts/python.exe -m pip install -e ".[dev,postgres]"
 ```
 
+### Five-minute repair demo
+
+The repository includes a self-contained external strategy fixture, so the
+complete repair workflow can be demonstrated without the author's private
+research repository or an API key:
+
+```powershell
+.venv311\Scripts\python.exe scripts\run_repair_demo.py --approve-demo-actions
+```
+
+The command creates an isolated copy under `.demo_runs/`, starts from a run
+that is missing positions, trades, and rankings, and uses the real
+`plan-react` runner to retrieve code, trace the export path, prepare a patch,
+pause at five LangGraph approval interrupts, apply the reviewed repair, and
+verify a fresh artifact set. The flag explicitly authorizes only those five
+expected demo actions; anything unexpected is rejected. The generated
+`demo_report.json` and `demo_report.md` record the tool sequence, approvals,
+checkpoint evidence, and deterministic success checks. See
+[`examples/README.md`](examples/README.md) for the fixture boundary.
+
 Machine-local integration files are intentionally excluded from version
 control. Copy the public templates only when you need those integrations, then
 replace their placeholder paths for your workstation:
@@ -276,7 +296,7 @@ Run one scenario with `--scenario <id>`. An optional real-provider smoke run is 
 To refresh the centralized machine-readable project state:
 
 ```bash
-.venv311/Scripts/quant-agent.exe update-state --test-status "145 passed"
+.venv311/Scripts/quant-agent.exe update-state --test-status "146 passed"
 ```
 
 Use `--dry-run` to compute the update without writing `state/project_state.json`.

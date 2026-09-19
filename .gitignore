@@ -3,6 +3,7 @@ __pycache__/
 .pytest_cache/
 evals/results/
 .eval_tmp/
+.demo_runs/
 .wheels/
 .env
 .env.*
@@ -25,11 +26,6 @@ state/sessions/*.jsonl
 state/sessions/*.state.json
 state/sessions/*.approval.json
 state/sessions/*.sqlite*
-
-# Machine-local integration configuration. Public templates live beside them.
-/.codex/config.toml
-/configs/xgboost_live_strategy.yaml
-/state/project_state.json
 
 # Machine-local integration configuration. Public templates live beside them.
 /.codex/config.toml

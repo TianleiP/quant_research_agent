@@ -1,6 +1,6 @@
 # Quant-Agent Project State
 
-Last updated: 2026-09-14
+Last updated: 2026-09-19
 
 This file is the human-readable project state index. It is not the only source of truth. The real operational records live in `runs/`, `.fix_proposals/`, `.discovery/`, `.source_traces/`, and `configs/`.
 
@@ -8,7 +8,7 @@ This file is the human-readable project state index. It is not the only source o
 
 `quant-agent` is a working quant backtest audit CLI plus a persisted LangGraph Agent with configurable SQLite/PostgreSQL checkpoints, a local MCP server, and a repository Codex Skill.
 
-It can run or ingest a configured external backtest, normalize strategy artifacts, produce repeatable run folders with enriched metrics and reproducibility metadata, run deterministic audits, replay position-aware daily decisions, route natural-language requests to commands, maintain strategy lineage, close promotion warnings into a durable review report, build/query hybrid code memory, generate source traces, generate structured memory-informed fix proposals, create review-only generalized LLM fix drafts for unfamiliar source patterns, apply reviewed deterministic patch proposals, and run a persisted approval-gated patch-run-inspect lifecycle. The Agent supports native tool calling, a structured multi-step plan stored in State, an evaluator after each meaningful action, bounded replanning, and cited code retrieval that fuses semantic, lexical, symbol, and path evidence. The same 15 registered tools are now available to Codex over MCP, while a Skill teaches Codex the evidence-first workflow without moving safety policy into the prompt. A separate six-scenario end-to-end eval suite now checks complete workflow behavior with isolated fixtures and deterministic graders.
+It can run or ingest a configured external backtest, normalize strategy artifacts, produce repeatable run folders with enriched metrics and reproducibility metadata, run deterministic audits, replay position-aware daily decisions, route natural-language requests to commands, maintain strategy lineage, close promotion warnings into a durable review report, build/query hybrid code memory, generate source traces, generate structured memory-informed fix proposals, create review-only generalized LLM fix drafts for unfamiliar source patterns, apply reviewed deterministic patch proposals, and run a persisted approval-gated patch-run-inspect lifecycle. The Agent supports native tool calling, a structured multi-step plan stored in State, an evaluator after each meaningful action, bounded replanning, and cited code retrieval that fuses semantic, lexical, symbol, and path evidence. The same 15 registered tools are now available to Codex over MCP, while a Skill teaches Codex the evidence-first workflow without moving safety policy into the prompt. A separate six-scenario end-to-end eval suite checks complete workflow behavior with isolated fixtures and deterministic graders, and `scripts/run_repair_demo.py` provides a public, self-contained version of the successful repair path.
 
 It is not a general autonomous coding agent. Its scope is deliberately limited to registered quant research and repair tools:
 
@@ -36,7 +36,7 @@ The loop keeps rule, legacy JSON selector, and plain ReAct modes for comparison.
 - Expected variant: `base5_combo_accel2_mom12`
 - Fresh subprocess run completed: yes
 - Elapsed time: about 11.6 minutes
-- Latest local test status: `145 passed` with PostgreSQL integration enabled; `143 passed, 2 deselected` without the service
+- Latest local test status: `146 passed` with PostgreSQL integration enabled; `144 passed, 2 deselected` without the service
 
 ## Agent Runtime
 
@@ -55,8 +55,8 @@ The project is installed in editable mode in `.venv311`, and the full test suite
 
 ```text
 .venv311/Scripts/python.exe -m pytest
-145 passed with PostgreSQL integration enabled
-143 passed, 2 deselected without the PostgreSQL service
+146 passed with PostgreSQL integration enabled
+144 passed, 2 deselected without the PostgreSQL service
 ```
 
 The end-to-end Agent eval suite is separate from those tests:
