@@ -11,7 +11,7 @@ def test_load_config_reads_strategy_name():
 
 
 def test_with_run_before_ingest_returns_overridden_copy():
-    config = load_config(Path("configs/xgboost_live_strategy.yaml"))
+    config = load_config(Path("configs/xgboost_live_strategy.example.yaml"))
 
     overridden = with_run_before_ingest(config, True)
 
