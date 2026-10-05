@@ -299,7 +299,7 @@ Run one scenario with `--scenario <id>`. An optional real-provider smoke run is 
 To refresh the centralized machine-readable project state:
 
 ```bash
-.venv311/Scripts/quant-agent.exe update-state --test-status "146 passed"
+.venv311/Scripts/quant-agent.exe update-state --test-status "147 passed"
 ```
 
 Use `--dry-run` to compute the update without writing `state/project_state.json`.

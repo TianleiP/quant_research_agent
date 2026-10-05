@@ -36,7 +36,7 @@ The loop keeps rule, legacy JSON selector, and plain ReAct modes for comparison.
 - Expected variant: `base5_combo_accel2_mom12`
 - Fresh subprocess run completed: yes
 - Elapsed time: about 11.6 minutes
-- Latest local test status: `146 passed` with PostgreSQL integration enabled; `144 passed, 2 deselected` without the service
+- Latest local test status: `147 passed` with PostgreSQL integration enabled; `145 passed, 2 deselected` without the service
 
 ## Agent Runtime
 
@@ -55,8 +55,8 @@ The project is installed in editable mode in `.venv311`, and the full test suite
 
 ```text
 .venv311/Scripts/python.exe -m pytest
-146 passed with PostgreSQL integration enabled
-144 passed, 2 deselected without the PostgreSQL service
+147 passed with PostgreSQL integration enabled
+145 passed, 2 deselected without the PostgreSQL service
 ```
 
 The end-to-end Agent eval suite is separate from those tests:

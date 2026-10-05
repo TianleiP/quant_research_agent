@@ -52,7 +52,11 @@ jobs:
         run: python scripts/publication_audit.py
 
       - name: Run unit and integration tests
-        run: python -m pytest -q
+        run: python -m pytest -q --junitxml=pytest-results.xml
+
+      - name: Report failing test names
+        if: failure()
+        run: python scripts/ci_failure_summary.py pytest-results.xml
 
       - name: Run end-to-end Agent evals
         run: python -m evals.run

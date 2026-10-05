@@ -19,7 +19,7 @@ The central design idea is that the LLM is allowed to reason and choose from reg
 
 ## 2. A 30-second interview pitch
 
-> I built a domain-specific agent for quantitative research operations. It wraps an existing backtest system with a stable artifact model, deterministic audits, a LangGraph plan-and-execute loop, human approval, configurable SQLite/PostgreSQL checkpoints, and hybrid code retrieval. The LLM can create plans, choose tools, and evaluate results, but all actions pass through a deterministic tool registry and safety layer. I also exposed the same tools to Codex through a local MCP server and packaged the workflow as a Codex Skill. The project currently has 146 verified tests when the optional PostgreSQL integration service is enabled, plus a verified end-to-end backtest artifact set.
+> I built a domain-specific agent for quantitative research operations. It wraps an existing backtest system with a stable artifact model, deterministic audits, a LangGraph plan-and-execute loop, human approval, configurable SQLite/PostgreSQL checkpoints, and hybrid code retrieval. The LLM can create plans, choose tools, and evaluate results, but all actions pass through a deterministic tool registry and safety layer. I also exposed the same tools to Codex through a local MCP server and packaged the workflow as a Codex Skill. The project currently has 147 verified tests when the optional PostgreSQL integration service is enabled, plus a verified end-to-end backtest artifact set.
 
 ## 3. A two-minute interview explanation
 
@@ -75,10 +75,10 @@ Quant-Agent turns these loosely connected tasks into a repeatable workflow with 
 |---|---:|
 | Python source files | 78 |
 | Approximate Python source lines | 12,565 |
-| Test files | 36 |
-| Approximate test lines | 3,977 |
-| Passing tests with PostgreSQL integration enabled | 146 |
-| Default suite without PostgreSQL service | 144 passing, 2 deselected |
+| Test files | 37 |
+| Approximate test lines | 4,010 |
+| Passing tests with PostgreSQL integration enabled | 147 |
+| Default suite without PostgreSQL service | 145 passing, 2 deselected |
 | End-to-end Agent eval scenarios | 6 passing |
 | Recorded project capabilities | 26 implemented, 0 partial, 0 planned |
 | MCP tools | 15 |
@@ -744,9 +744,9 @@ The Skill follows the repository-local layout described by the [official Codex S
 
 ## 22. Testing strategy
 
-The current test suite contains 146 passing tests across 36 files when the
+The current test suite contains 147 passing tests across 37 files when the
 optional PostgreSQL integration database is enabled. Without that service, the
-ordinary suite passes 144 tests and deselects the two PostgreSQL cases.
+ordinary suite passes 145 tests and deselects the two PostgreSQL cases.
 
 ### Major tested areas
 
@@ -783,7 +783,7 @@ The suite explicitly checks that:
 
 ### What testing does not yet prove
 
-The 146 tests remain primarily unit and integration tests, so they are complemented by a separate six-scenario end-to-end suite under `evals/`. The scenarios use isolated copies/fixtures and deterministic contracts to check complete task behavior: read-only assessment, approval rejection, successful repair, failed-verification replanning, loop protection, and MCP parity. The runner records pass/fail, task success, graph status, terminal reason, selected/executed tool sequences, approval compliance, unauthorized-action violations, steps, mutations, latency, and evidence in JSON plus Markdown.
+The 147 tests remain primarily unit and integration tests, so they are complemented by a separate six-scenario end-to-end suite under `evals/`. The scenarios use isolated copies/fixtures and deterministic contracts to check complete task behavior: read-only assessment, approval rejection, successful repair, failed-verification replanning, loop protection, and MCP parity. The runner records pass/fail, task success, graph status, terminal reason, selected/executed tool sequences, approval compliance, unauthorized-action violations, steps, mutations, latency, and evidence in JSON plus Markdown.
 
 Most graders are deterministic: ordered subsequences rather than brittle exact traces, forbidden tools, approval records, byte/file hashes, artifact contracts, checkpoint interrupts, failure evidence, loop counts, and MCP schema/result equality. A deterministic fake embedding probe verifies semantic retrieval for a low-lexical-overlap query. What remains unproven is broad behavior across many prompts and real model versions; the real-provider smoke path is deliberately optional rather than part of the free repeatable default.
 
@@ -886,7 +886,7 @@ The strongest learning outcomes are:
 
 ### “Is this just a toy Agent?”
 
-> It is a personal prototype rather than a production service, but it is not only a prompt demo. It operates on a real external backtest, writes and validates durable artifacts, persists graph execution in SQLite or PostgreSQL, enforces approval and path rules outside the model, retrieves cited code, applies reviewed patches, has 146 verified unit/integration tests with PostgreSQL enabled, and passes six isolated end-to-end Agent scenarios. GitHub Actions now checks the publication boundary, PostgreSQL path, and eval suite. The missing production pieces are scheduling, monitoring, multi-user security, packaged deployment, and broad real-provider evaluation.
+> It is a personal prototype rather than a production service, but it is not only a prompt demo. It operates on a real external backtest, writes and validates durable artifacts, persists graph execution in SQLite or PostgreSQL, enforces approval and path rules outside the model, retrieves cited code, applies reviewed patches, has 147 verified unit/integration tests with PostgreSQL enabled, and passes six isolated end-to-end Agent scenarios. GitHub Actions now checks the publication boundary, PostgreSQL path, and eval suite. The missing production pieces are scheduling, monitoring, multi-user security, packaged deployment, and broad real-provider evaluation.
 
 ### “Where is the LLM actually used?”
 
@@ -964,7 +964,7 @@ Build a trustworthy Agent layer that could inspect research state, find relevant
 - Implemented structured repair proposals, guarded patch application, rerun verification, and revision loop guards.
 - Exposed the shared tools to Codex through MCP and packaged the workflow as a Skill.
 - Added six isolated end-to-end Agent scenarios with deterministic approval, mutation, artifact, replanning, loop-guard, semantic-retrieval, and MCP-parity grading.
-- Maintained a 146-test suite across the evolution, including optional real PostgreSQL cross-process interrupt/resume tests, a self-contained public repair demo, and publication-safety checks.
+- Maintained a 147-test suite across the evolution, including optional real PostgreSQL cross-process interrupt/resume tests, a self-contained public repair demo, and publication-safety checks.
 
 ### Result
 
@@ -974,7 +974,7 @@ The system successfully repaired the external strategy export path and produced 
 
 Use two or three, not all of them.
 
-- Built a Python/LangGraph quantitative-research Agent with structured planning, native tool calling, evidence-checked evaluation, bounded replanning, configurable SQLite/PostgreSQL checkpointing, and human-in-the-loop approval; verified cross-process interrupt/resume and maintained 146 passing tests plus six passing end-to-end Agent eval scenarios.
+- Built a Python/LangGraph quantitative-research Agent with structured planning, native tool calling, evidence-checked evaluation, bounded replanning, configurable SQLite/PostgreSQL checkpointing, and human-in-the-loop approval; verified cross-process interrupt/resume and maintained 147 passing tests plus six passing end-to-end Agent eval scenarios.
 - Designed a deterministic safety layer for LLM-selected actions using a central JSON-schema tool registry, code-owned risk classification, execution budgets, path containment, guarded unified-diff application, and revision-loop detection.
 - Implemented hybrid code retrieval combining optional dense embeddings, BM25, exact symbol/path matching, and weighted reciprocal-rank fusion, returning per-channel scores and file/line citations for source-grounded repair planning.
 - Exposed 15 shared domain tools to Codex through an MCP stdio server and authored a repository Skill for an inspect–diagnose–propose–approve–execute–verify–report workflow without duplicating business logic.
@@ -983,7 +983,7 @@ Use two or three, not all of them.
 
 ## 30. Suggested LinkedIn or portfolio description
 
-> Quant-Agent is a domain-specific Applied LLM system for quantitative research operations. It combines a deterministic experiment/audit core with a LangGraph Agent that supports structured multi-step planning, ReAct tool calling, evidence-based evaluation, bounded replanning, configurable SQLite/PostgreSQL checkpoint persistence, persistent human approval, and hybrid source-code retrieval. A shared JSON-schema tool registry powers the CLI, internal Agent, and a local MCP server, while a Codex Skill describes the complete repair and verification workflow. The project currently includes 146 verified tests with PostgreSQL enabled, six passing end-to-end Agent scenarios, a self-contained public repair demo, and a verified integration with an external XGBoost backtest repository.
+> Quant-Agent is a domain-specific Applied LLM system for quantitative research operations. It combines a deterministic experiment/audit core with a LangGraph Agent that supports structured multi-step planning, ReAct tool calling, evidence-based evaluation, bounded replanning, configurable SQLite/PostgreSQL checkpoint persistence, persistent human approval, and hybrid source-code retrieval. A shared JSON-schema tool registry powers the CLI, internal Agent, and a local MCP server, while a Codex Skill describes the complete repair and verification workflow. The project currently includes 147 verified tests with PostgreSQL enabled, six passing end-to-end Agent scenarios, a self-contained public repair demo, and a verified integration with an external XGBoost backtest repository.
 
 ## 31. Five-minute demo plan
 
