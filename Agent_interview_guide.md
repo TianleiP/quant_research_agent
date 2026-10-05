@@ -68,7 +68,6 @@ Quant-Agent turns these loosely connected tasks into a repeatable workflow with 
 - A complete static-analysis engine or runtime debugger.
 - A distributed service with multi-user authentication.
 - A scheduled service with alerts, dashboards, or on-call monitoring.
-- A public GitHub repository at the time of this snapshot.
 
 ## 6. Verified project facts
 
@@ -86,8 +85,8 @@ Quant-Agent turns these loosely connected tasks into a repeatable workflow with 
 | Main runtime | Python 3.11.1 in `.venv311` |
 | LangGraph version in the verified environment | 1.2.4 |
 | MCP SDK version installed in the verified environment | 2.2.0 |
-| Git repository | Local `main` branch; no remote yet |
-| CI workflow | Not implemented |
+| Git repository | Public GitHub repository on `main`: `TianleiP/quant_research_agent` |
+| CI workflow | GitHub Actions: publication audit, PostgreSQL-backed tests, and six Agent evals |
 | Scheduler | Not implemented |
 | Active monitoring/alerting | Not implemented |
 
@@ -863,7 +862,7 @@ It is not yet at production-platform depth because it lacks:
 - Distributed execution.
 - Scheduler and job queue.
 - Operational telemetry and alerts.
-- CI/CD and packaged deployment.
+- Packaged releases and deployment automation beyond the test-only CI workflow.
 - Broad empirical Agent evaluations.
 
 A fair description is: **a substantial personal Applied LLM systems project with real Agent-engineering depth and a deliberately limited domain**, not a toy prompt demo and not a production platform.
@@ -887,7 +886,7 @@ The strongest learning outcomes are:
 
 ### “Is this just a toy Agent?”
 
-> It is a personal prototype rather than a production service, but it is not only a prompt demo. It operates on a real external backtest, writes and validates durable artifacts, persists graph execution in SQLite or PostgreSQL, enforces approval and path rules outside the model, retrieves cited code, applies reviewed patches, has 146 verified unit/integration tests with PostgreSQL enabled, and passes six isolated end-to-end Agent scenarios. The missing production pieces are scheduling, monitoring, multi-user security, CI/CD, and broad real-provider evaluation.
+> It is a personal prototype rather than a production service, but it is not only a prompt demo. It operates on a real external backtest, writes and validates durable artifacts, persists graph execution in SQLite or PostgreSQL, enforces approval and path rules outside the model, retrieves cited code, applies reviewed patches, has 146 verified unit/integration tests with PostgreSQL enabled, and passes six isolated end-to-end Agent scenarios. GitHub Actions now checks the publication boundary, PostgreSQL path, and eval suite. The missing production pieces are scheduling, monitoring, multi-user security, packaged deployment, and broad real-provider evaluation.
 
 ### “Where is the LLM actually used?”
 
@@ -943,7 +942,7 @@ The strongest learning outcomes are:
 
 ### “What would you build next?”
 
-> The compact six-scenario Agent evaluation suite is complete. Next I would turn those executable examples into a short architecture/demo package and make MCP setup portable for a public GitHub repository. I would add broader real-provider evaluation only where it gives useful signal; production scheduling and monitoring would come only if there were a real operational user.
+> The compact six-scenario Agent evaluation suite, self-contained repair demo, public repository, and CI workflow are complete. Next I would add one recorded walkthrough and a small real-provider smoke sample where it gives useful signal. Production scheduling and monitoring would come only if there were a real operational user.
 
 ## 28. STAR-format project story
 
@@ -1038,7 +1037,7 @@ Do not run the full 11.6-minute external backtest live during a short interview.
 Recommended reading order for an interviewer:
 
 1. `README.md` — usage and feature overview.
-2. `INTERVIEW_GUIDE.md` — architecture and honest scope.
+2. `Agent_interview_guide.md` — architecture and honest scope.
 3. `src/quant_agent/agent/tool_catalog.py` — shared contracts and risk metadata.
 4. `src/quant_agent/agent/graph.py` — graph structure.
 5. `src/quant_agent/agent/planning.py` — structured plan/evaluation schemas and deterministic checks.
@@ -1051,13 +1050,13 @@ Recommended reading order for an interviewer:
 12. `.agents/skills/quant-research-workflow/SKILL.md` — Codex workflow guidance.
 13. `tests/test_structured_planning.py` — planner/evaluator/replanner tests.
 14. `tests/test_mcp_server.py` — protocol and safety integration tests.
-15. `state/project_state.json` — current machine-readable project status.
+15. `state/project_state.example.json` — public machine-readable state template.
 
 ## 33. Honest limitations to state proactively
 
-1. There is no public GitHub repository yet.
-2. Local MCP paths are machine-specific and need a setup helper or template before publication.
-3. There is no CI pipeline.
+1. There is no tagged release or published Python package.
+2. MCP setup still requires users to copy the public template and supply their local interpreter/repository paths.
+3. CI validates tests and evals, but there is no release or deployment pipeline.
 4. There is no scheduler, queue, daemon, or recurring-run controller.
 5. There is no active monitoring dashboard or alerting.
 6. General automatic crash recovery and retry/backoff are not implemented.
@@ -1074,9 +1073,14 @@ These limitations make the claims credible. They also provide a clear roadmap wi
 
 ## 34. Best next step
 
-The six-scenario end-to-end Agent evaluation suite is complete and repeatable. It now provides executable evidence for read-only behavior, rejection safety, successful repair, failed-verification replanning, loop protection, semantic retrieval, and MCP parity.
+The six-scenario end-to-end Agent evaluation suite, self-contained repair demo,
+public repository, MIT license, and GitHub Actions workflow are complete.
 
-The best next step is packaging rather than more architecture: create a concise architecture diagram, record a five-minute demonstration using two or three representative scenarios, replace machine-specific MCP paths with a setup helper/template, and prepare a public GitHub repository. Add a small real-provider smoke sample only if it improves the story; keep the deterministic suite as the regression baseline.
+The best next step is presentation and selective validation rather than more
+architecture: record a short walkthrough of the existing demo, add one small
+real-provider smoke sample if it improves the story, and optionally create a
+tagged portfolio release. Keep the deterministic suite as the regression
+baseline.
 
 ## 35. Glossary
 

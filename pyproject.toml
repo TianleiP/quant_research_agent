@@ -7,6 +7,7 @@ name = "quant-agent"
 version = "0.1.0"
 description = "Quant research audit and experiment-management agent."
 requires-python = ">=3.11"
+license = {file = "LICENSE"}
 dependencies = [
   "langgraph>=1.0.0",
   "langgraph-checkpoint-sqlite==3.1.1",

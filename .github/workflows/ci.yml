@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: quant_agent
+          POSTGRES_PASSWORD: quant_agent_ci_only
+          POSTGRES_DB: quant_agent
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U quant_agent -d quant_agent"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 20
+
+    env:
+      QUANT_AGENT_TEST_POSTGRES_URI: postgresql://quant_agent:quant_agent_ci_only@127.0.0.1:5432/quant_agent?sslmode=disable&connect_timeout=5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install project
+        run: python -m pip install -e ".[dev,postgres]"
+
+      - name: Audit publication safety
+        run: python scripts/publication_audit.py
+
+      - name: Run unit and integration tests
+        run: python -m pytest -q
+
+      - name: Run end-to-end Agent evals
+        run: python -m evals.run

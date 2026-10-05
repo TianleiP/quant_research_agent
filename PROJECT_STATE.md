@@ -8,7 +8,7 @@ This file is the human-readable project state index. It is not the only source o
 
 `quant-agent` is a working quant backtest audit CLI plus a persisted LangGraph Agent with configurable SQLite/PostgreSQL checkpoints, a local MCP server, and a repository Codex Skill.
 
-It can run or ingest a configured external backtest, normalize strategy artifacts, produce repeatable run folders with enriched metrics and reproducibility metadata, run deterministic audits, replay position-aware daily decisions, route natural-language requests to commands, maintain strategy lineage, close promotion warnings into a durable review report, build/query hybrid code memory, generate source traces, generate structured memory-informed fix proposals, create review-only generalized LLM fix drafts for unfamiliar source patterns, apply reviewed deterministic patch proposals, and run a persisted approval-gated patch-run-inspect lifecycle. The Agent supports native tool calling, a structured multi-step plan stored in State, an evaluator after each meaningful action, bounded replanning, and cited code retrieval that fuses semantic, lexical, symbol, and path evidence. The same 15 registered tools are now available to Codex over MCP, while a Skill teaches Codex the evidence-first workflow without moving safety policy into the prompt. A separate six-scenario end-to-end eval suite checks complete workflow behavior with isolated fixtures and deterministic graders, and `scripts/run_repair_demo.py` provides a public, self-contained version of the successful repair path.
+It can run or ingest a configured external backtest, normalize strategy artifacts, produce repeatable run folders with enriched metrics and reproducibility metadata, run deterministic audits, replay position-aware daily decisions, route natural-language requests to commands, maintain strategy lineage, close promotion warnings into a durable review report, build/query hybrid code memory, generate source traces, generate structured memory-informed fix proposals, create review-only generalized LLM fix drafts for unfamiliar source patterns, apply reviewed deterministic patch proposals, and run a persisted approval-gated patch-run-inspect lifecycle. The Agent supports native tool calling, a structured multi-step plan stored in State, an evaluator after each meaningful action, bounded replanning, and cited code retrieval that fuses semantic, lexical, symbol, and path evidence. The same 15 registered tools are now available to Codex over MCP, while a Skill teaches Codex the evidence-first workflow without moving safety policy into the prompt. A separate six-scenario end-to-end eval suite checks complete workflow behavior with isolated fixtures, `scripts/run_repair_demo.py` provides a public self-contained repair path, and GitHub Actions verifies the publication audit, PostgreSQL-backed test suite, and all six evals on pushes and pull requests.
 
 It is not a general autonomous coding agent. Its scope is deliberately limited to registered quant research and repair tools:
 
@@ -367,7 +367,8 @@ goal.md
 
 ## Next Recommended Step
 
-Next, turn the completed architecture and six passing scenarios into a concise recruiter-facing demonstration:
+Next, turn the completed architecture, public demo, and CI evidence into a
+concise recorded recruiter-facing walkthrough:
 
 ```text
 architecture overview -> run one read-only scenario -> reject one gated action
@@ -375,7 +376,13 @@ architecture overview -> run one read-only scenario -> reject one gated action
 -> link the JSON/Markdown eval report
 ```
 
-Keep the demo small and evidence-focused; the scenario coverage is already implemented. After that, make MCP path setup portable and prepare the repository for public GitHub distribution. The separate promotion report still has four business-risk warnings requiring human decisions; those are strategy-governance decisions rather than missing Agent architecture.
+Keep the walkthrough small and evidence-focused; the scenario coverage,
+self-contained repair demo, MIT license, public GitHub repository, and CI
+workflow are already implemented. A tagged portfolio release and a narrowly
+scoped real-provider smoke sample are optional follow-ups. The separate
+promotion report still has four business-risk warnings requiring human
+decisions; those are strategy-governance decisions rather than missing Agent
+architecture.
 
 ## Maintenance Rule
 

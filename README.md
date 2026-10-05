@@ -1,5 +1,8 @@
 # Quant Agent
 
+[![CI](https://github.com/TianleiP/quant_research_agent/actions/workflows/ci.yml/badge.svg)](https://github.com/TianleiP/quant_research_agent/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A lightweight quant research workstation for running, recording, auditing, and documenting strategy experiments.
 
 This repository starts with a deterministic CLI scaffold. The agent treats the backtester as an adapter dependency: strategy-specific output is normalized into stable artifacts that reports, replay, audits, and LLM-assisted diagnostics can consume.
@@ -319,6 +322,17 @@ The audit checks publication candidates for likely API tokens, private-key
 headers, and personal Windows user paths. Generated evidence, virtual
 environments, run data, and the three ignored machine-local configuration files
 remain outside the publication boundary.
+
+## Continuous integration
+
+GitHub Actions runs on every push to `main` and on pull requests. The single CI
+job installs Python 3.11 with the PostgreSQL optional dependencies, starts a
+disposable PostgreSQL 17 service, runs the publication audit, executes the full
+unit/integration suite, and then runs all six end-to-end Agent eval scenarios.
+The database credential in the workflow is test-only and exists only inside the
+ephemeral CI job.
+
+This repository is released under the [MIT License](LICENSE).
 
 To build a structural index of an external backtest repo:
 
